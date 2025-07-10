@@ -3,18 +3,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import modela.Expediente;
+
+import modela.Interesado;
+
 public class Administrador {
-    private ArrayList<Expediente> expedientes;
+    private ArrayList<Expediente> expedientes = new ArrayList<>();
 
-    public Administrador() {
-        this.expedientes = new ArrayList<>();
-    }
-
-    // Registrar nuevo expediente
-    public void registrarExpediente(String id, String prioridad, String asunto,
-                                    String documentoReferencia, Interesado interesado) {
-        Expediente nuevo = new Expediente(id, prioridad, asunto, documentoReferencia, interesado);
-        expedientes.add(nuevo);
+    public void registrarExpediente(String id, String prioridad, String asunto, String docReferencia, Interesado interesado) {
+        Expediente exp = new Expediente(id, prioridad, asunto, docReferencia, interesado);
+        expedientes.add(exp);
     }
 
     // Registrar movimiento del expediente

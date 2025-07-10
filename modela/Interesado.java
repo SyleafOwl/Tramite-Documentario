@@ -1,3 +1,4 @@
+package modela;
 public class Interesado {
     private String dni;
     private String nombres;
