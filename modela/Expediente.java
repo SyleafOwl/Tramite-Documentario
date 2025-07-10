@@ -12,6 +12,7 @@ public class Expediente {
     private Date fechaFin;
     private ArrayList<String> seguimientos;
     private ArrayList<String> documentosGenerados;
+    private String comprobanteCierre = "";
 
     public Expediente(String id, String prioridad, String asunto,
                       String documentoReferencia, Interesado interesado) {
@@ -113,5 +114,12 @@ public class Expediente {
 
     public void setDocumentosGenerados(ArrayList<String> documentosGenerados) {
         this.documentosGenerados = documentosGenerados;
+    }
+
+    public void setComprobanteCierre(String comprobante) {
+        this.comprobanteCierre = comprobante;
+    }
+    public String getComprobanteCierre() {
+        return comprobanteCierre;
     }
 }

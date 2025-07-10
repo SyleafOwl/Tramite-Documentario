@@ -44,7 +44,7 @@ public class SistemaGUI extends JFrame {
 
         // Panel de expedientes y acciones
         JPanel listaPanel = new JPanel(new BorderLayout());
-        listaPanel.add(new JLabel("Expedientes:"), BorderLayout.NORTH);
+        listaPanel.add(new JLabel("Expedientes Pendientes:"), BorderLayout.NORTH);
         listaPanel.add(new JScrollPane(expedientesList), BorderLayout.CENTER);
 
         JButton movimientoBtn = new JButton("Registrar Movimiento");
@@ -59,9 +59,10 @@ public class SistemaGUI extends JFrame {
 
         // Panel de seguimiento
         JPanel seguimientoPanel = new JPanel(new BorderLayout());
-        seguimientoPanel.add(new JLabel("Seguimiento:"), BorderLayout.NORTH);
-        seguimientoArea.setEditable(false);
-        seguimientoPanel.add(new JScrollPane(seguimientoArea), BorderLayout.CENTER);
+        seguimientoPanel.add(new JLabel("Expedientes Finalizados:"), BorderLayout.NORTH);
+        JTextArea finalizadosArea = new JTextArea(10, 30);
+        finalizadosArea.setEditable(false);
+        seguimientoPanel.add(new JScrollPane(finalizadosArea), BorderLayout.CENTER);
 
         // Panel de alertas
         JTextArea alertasArea = new JTextArea(5, 30);
@@ -104,6 +105,7 @@ public class SistemaGUI extends JFrame {
             }
         });
 
+        // Al finalizar un expediente, registra todo y genera comprobante
         finalizarBtn.addActionListener(e -> {
             Expediente exp = expedientesList.getSelectedValue();
             if (exp != null && exp.getFechaFin() == null) {
@@ -112,12 +114,18 @@ public class SistemaGUI extends JFrame {
                 if (doc != null && !doc.isEmpty()) {
                     exp.agregarDocumentoGenerado(doc);
                 }
+                // Generar comprobante de cierre
+                String comprobante = "Comprobante de cierre: Expediente " + exp.getId() +
+                    " cerrado el " + exp.getFechaFin() + " por " + exp.getInteresado().getNombres();
+                exp.setComprobanteCierre(comprobante);
                 expedientesList.repaint();
                 actualizarAlertas(alertasArea);
-                JOptionPane.showMessageDialog(this, "Trámite finalizado.");
+                actualizarFinalizados(finalizadosArea);
+                JOptionPane.showMessageDialog(this, "Trámite finalizado.\n" + comprobante);
             }
         });
 
+        // El botón de seguimiento ahora muestra un JDialog con el detalle
         seguimientoBtn.addActionListener(e -> {
             Expediente exp = expedientesList.getSelectedValue();
             if (exp != null) {
@@ -132,7 +140,12 @@ public class SistemaGUI extends JFrame {
                 for (String m : exp.getSeguimientos()) sb.append(" - ").append(m).append("\n");
                 sb.append("\nDocumentos generados:\n");
                 for (String d : exp.getDocumentosGenerados()) sb.append(" - ").append(d).append("\n");
-                seguimientoArea.setText(sb.toString());
+                if (exp.getFechaFin() != null) {
+                    sb.append("\n").append(exp.getComprobanteCierre());
+                }
+                JTextArea detalle = new JTextArea(sb.toString(), 20, 50);
+                detalle.setEditable(false);
+                JOptionPane.showMessageDialog(this, new JScrollPane(detalle), "Seguimiento de Expediente", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -154,5 +167,18 @@ public class SistemaGUI extends JFrame {
               .append(" - ").append(e.getFechaInicio()).append(" - ").append(e.getInteresado().getNombres()).append("\n");
         }
         alertasArea.setText(sb.length() == 0 ? "No hay expedientes pendientes." : sb.toString());
+    }
+
+    // Nueva función para mostrar expedientes finalizados
+    private void actualizarFinalizados(JTextArea finalizadosArea) {
+        List<Expediente> finalizados = Collections.list(expedientesModel.elements());
+        finalizados.removeIf(e -> e.getFechaFin() == null);
+        StringBuilder sb = new StringBuilder();
+        for (Expediente e : finalizados) {
+            sb.append(e.getId()).append(" - ").append(e.getPrioridad())
+              .append(" - Cerrado: ").append(e.getFechaFin())
+              .append("\n").append(e.getComprobanteCierre()).append("\n\n");
+        }
+        finalizadosArea.setText(sb.length() == 0 ? "No hay expedientes finalizados." : sb.toString());
     }
 }
