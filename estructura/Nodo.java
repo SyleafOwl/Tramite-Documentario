@@ -1,3 +1,5 @@
+package estructura;
+
 class Nodo<T> {
     T dato;
     Nodo<T> siguiente;
