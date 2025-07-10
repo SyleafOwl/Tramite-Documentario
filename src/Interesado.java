@@ -1,116 +1,55 @@
-import java.util.Date;
-import java.util.ArrayList;
+public class Interesado {
+    private String dni;
+    private String nombres;
+    private String telefono;
+    private String email;
+    private String tipo; // "ulima" o "externo"
 
-public class Expediente {
-    private String id;
-    private String prioridad; // baja, media, alta
-    private String asunto;
-    private String documentoReferencia;
-    private Interesado interesado;
-    private Date fechaInicio;
-    private Date fechaFin;
-    private ArrayList<String> seguimientos;
-    private ArrayList<String> documentosGenerados;
-
-    public Expediente(String id, String prioridad, String asunto,
-                      String documentoReferencia, Interesado interesado) {
-        this.id = id;
-        this.prioridad = prioridad;
-        this.asunto = asunto;
-        this.documentoReferencia = documentoReferencia;
-        this.interesado = interesado;
-        this.fechaInicio = new Date(); // Fecha actual al crear
-        this.fechaFin = null;
-        this.seguimientos = new ArrayList<>();
-        this.documentosGenerados = new ArrayList<>();
+    public Interesado(String dni, String nombres, String telefono, String email, String tipo) {
+        this.dni = dni;
+        this.nombres = nombres;
+        this.telefono = telefono;
+        this.email = email;
+        this.tipo = tipo;
     }
 
-    // Métodos para seguimientos
-    public void agregarSeguimiento(String dependencia, String accion) {
-        String seguimiento = new Date() + " - " + dependencia + ": " + accion;
-        this.seguimientos.add(seguimiento);
+    public String getDni() {
+        return dni;
     }
 
-    public void finalizarExpediente() {
-        this.fechaFin = new Date();
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
-    // Métodos para documentos
-    public void agregarDocumentoGenerado(String nombreDocumento) {
-        this.documentosGenerados.add(nombreDocumento);
+    public String getNombres() {
+        return nombres;
     }
 
-    // Aqui puse todos los get y set por si se necesita adelante xd
-
-    public String getId() {
-        return id;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public String getPrioridad() {
-        return prioridad;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
-    public void setPrioridad(String prioridad) {
-        this.prioridad = prioridad;
+    public String getEmail() {
+        return email;
     }
 
-    public String getAsunto() {
-        return asunto;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setAsunto(String asunto) {
-        this.asunto = asunto;
+    public String getTipo() {
+        return tipo;
     }
 
-    public String getDocumentoReferencia() {
-        return documentoReferencia;
-    }
-
-    public void setDocumentoReferencia(String documentoReferencia) {
-        this.documentoReferencia = documentoReferencia;
-    }
-
-    public Interesado getInteresado() {
-        return interesado;
-    }
-
-    public void setInteresado(Interesado interesado) {
-        this.interesado = interesado;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public ArrayList<String> getSeguimientos() {
-        return seguimientos;
-    }
-
-    public void setSeguimientos(ArrayList<String> seguimientos) {
-        this.seguimientos = seguimientos;
-    }
-
-    public ArrayList<String> getDocumentosGenerados() {
-        return documentosGenerados;
-    }
-
-    public void setDocumentosGenerados(ArrayList<String> documentosGenerados) {
-        this.documentosGenerados = documentosGenerados;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
