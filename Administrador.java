@@ -81,7 +81,8 @@ public class Administrador {
     }
     public void mostrarExpedientes() {
         for (Expediente exp : expedientes) {
-            System.out.println(exp);
+            System.out.println("ID: " + exp.getId() + ", Asunto: " + exp.getAsunto() +
+                               ", Prioridad: " + exp.getPrioridad() + ", Estado: " + (exp.getFechaFin() == null ? "Activo" : "Finalizado"));
         }
     }
 }
