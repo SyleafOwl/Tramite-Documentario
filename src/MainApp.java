@@ -27,5 +27,7 @@ public class MainApp {
         for (Expediente exp : alertas) {
             System.out.println(exp.getId() + " - " + exp.getAsunto() + " (" + exp.getPrioridad() + ")");
         }
+
+        admin.mostrarExpedientes();
     }
 }

@@ -79,4 +79,9 @@ public class Administrador {
         }
         return null;
     }
+    public void mostrarExpedientes() {
+        for (Expediente exp : expedientes) {
+            System.out.println(exp);
+        }
+    }
 }
