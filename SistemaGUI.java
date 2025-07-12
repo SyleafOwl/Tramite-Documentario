@@ -38,7 +38,7 @@ public class SistemaGUI extends JFrame {
         registroPanel.add(new JLabel("ID Expediente:")); registroPanel.add(idField);
         registroPanel.add(new JLabel("Prioridad:")); registroPanel.add(prioridadField);
         registroPanel.add(new JLabel("DNI:")); registroPanel.add(dniField);
-        registroPanel.add(new JLabel("Nombres:")); registroPanel.add(nombreField);
+        registroPanel.add(new JLabel("Nombre y Apellido:")); registroPanel.add(nombreField);
         registroPanel.add(new JLabel("Teléfono:")); registroPanel.add(telField);
         registroPanel.add(new JLabel("Email:")); registroPanel.add(emailField);
         registroPanel.add(new JLabel("Tipo:")); registroPanel.add(tipoCombo);

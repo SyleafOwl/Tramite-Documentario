@@ -122,4 +122,9 @@ public class Expediente {
     public String getComprobanteCierre() {
         return comprobanteCierre;
     }
+
+    @Override
+    public String toString() {
+        return id + "." + interesado.getNombres() + "." + interesado.getDni();
+    }
 }
