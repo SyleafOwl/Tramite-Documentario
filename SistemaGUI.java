@@ -10,6 +10,11 @@ import modela.Interesado;
 public class SistemaGUI extends JFrame {
     private DefaultListModel<Expediente> expedientesModel = new DefaultListModel<>();
     private JList<Expediente> expedientesList = new JList<>(expedientesModel);
+
+    // Nuevo modelo y lista para finalizados
+    private DefaultListModel<Expediente> finalizadosModel = new DefaultListModel<>();
+    private JList<Expediente> finalizadosList = new JList<>(finalizadosModel);
+
     private JTextArea seguimientoArea = new JTextArea(8, 30);
 
     public SistemaGUI() {
@@ -57,12 +62,11 @@ public class SistemaGUI extends JFrame {
 
         listaPanel.add(accionesPanel, BorderLayout.SOUTH);
 
-        // Panel de seguimiento
+        // Panel de seguimiento (ahora con lista de finalizados)
         JPanel seguimientoPanel = new JPanel(new BorderLayout());
         seguimientoPanel.add(new JLabel("Expedientes Finalizados:"), BorderLayout.NORTH);
-        JTextArea finalizadosArea = new JTextArea(10, 30);
-        finalizadosArea.setEditable(false);
-        seguimientoPanel.add(new JScrollPane(finalizadosArea), BorderLayout.CENTER);
+        finalizadosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        seguimientoPanel.add(new JScrollPane(finalizadosList), BorderLayout.CENTER);
 
         // Panel de alertas
         JTextArea alertasArea = new JTextArea(5, 30);
@@ -105,7 +109,7 @@ public class SistemaGUI extends JFrame {
             }
         });
 
-        // Al finalizar un expediente, registra todo y genera comprobante
+        // Al finalizar un expediente, quitarlo de pendientes y agregarlo a finalizados
         finalizarBtn.addActionListener(e -> {
             Expediente exp = expedientesList.getSelectedValue();
             if (exp != null && exp.getFechaFin() == null) {
@@ -114,38 +118,31 @@ public class SistemaGUI extends JFrame {
                 if (doc != null && !doc.isEmpty()) {
                     exp.agregarDocumentoGenerado(doc);
                 }
-                // Generar comprobante de cierre
                 String comprobante = "Comprobante de cierre: Expediente " + exp.getId() +
                     " cerrado el " + exp.getFechaFin() + " por " + exp.getInteresado().getNombres();
                 exp.setComprobanteCierre(comprobante);
-                expedientesList.repaint();
+
+                // Quitar de pendientes y agregar a finalizados
+                expedientesModel.removeElement(exp);
+                finalizadosModel.addElement(exp);
+
+                expedientesList.clearSelection();
                 actualizarAlertas(alertasArea);
-                actualizarFinalizados(finalizadosArea);
+                actualizarFinalizados();
                 JOptionPane.showMessageDialog(this, "Trámite finalizado.\n" + comprobante);
             }
         });
 
-        // El botón de seguimiento ahora muestra un JDialog con el detalle
-        seguimientoBtn.addActionListener(e -> {
-            Expediente exp = expedientesList.getSelectedValue();
-            if (exp != null) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("ID: ").append(exp.getId()).append("\nPrioridad: ").append(exp.getPrioridad())
-                  .append("\nInteresado: ").append(exp.getInteresado().getNombres()).append(" (").append(exp.getInteresado().getTipo()).append(")")
-                  .append("\nAsunto: ").append(exp.getAsunto())
-                  .append("\nDoc. Referencia: ").append(exp.getDocumentoReferencia())
-                  .append("\nInicio: ").append(exp.getFechaInicio())
-                  .append("\nFinalización: ").append(exp.getFechaFin() == null ? "En trámite" : exp.getFechaFin())
-                  .append("\n\nMovimientos:\n");
-                for (String m : exp.getSeguimientos()) sb.append(" - ").append(m).append("\n");
-                sb.append("\nDocumentos generados:\n");
-                for (String d : exp.getDocumentosGenerados()) sb.append(" - ").append(d).append("\n");
-                if (exp.getFechaFin() != null) {
-                    sb.append("\n").append(exp.getComprobanteCierre());
+        // Botón de seguimiento para pendientes
+        seguimientoBtn.addActionListener(e -> mostrarSeguimiento(expedientesList.getSelectedValue()));
+
+        // Doble click en finalizados para ver seguimiento
+        finalizadosList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    Expediente exp = finalizadosList.getSelectedValue();
+                    mostrarSeguimiento(exp);
                 }
-                JTextArea detalle = new JTextArea(sb.toString(), 20, 50);
-                detalle.setEditable(false);
-                JOptionPane.showMessageDialog(this, new JScrollPane(detalle), "Seguimiento de Expediente", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -170,15 +167,37 @@ public class SistemaGUI extends JFrame {
     }
 
     // Nueva función para mostrar expedientes finalizados
-    private void actualizarFinalizados(JTextArea finalizadosArea) {
-        List<Expediente> finalizados = Collections.list(expedientesModel.elements());
-        finalizados.removeIf(e -> e.getFechaFin() == null);
+    private void actualizarFinalizados() {
+        List<Expediente> finalizados = Collections.list(finalizadosModel.elements());
         StringBuilder sb = new StringBuilder();
         for (Expediente e : finalizados) {
             sb.append(e.getId()).append(" - ").append(e.getPrioridad())
               .append(" - Cerrado: ").append(e.getFechaFin())
               .append("\n").append(e.getComprobanteCierre()).append("\n\n");
         }
-        finalizadosArea.setText(sb.length() == 0 ? "No hay expedientes finalizados." : sb.toString());
+        // No es necesario si usas finalizadosModel, pero puedes actualizar si lo deseas
+    }
+
+    // Nueva función para mostrar seguimiento de cualquier expediente
+    private void mostrarSeguimiento(Expediente exp) {
+        if (exp != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("ID: ").append(exp.getId()).append("\nPrioridad: ").append(exp.getPrioridad())
+              .append("\nInteresado: ").append(exp.getInteresado().getNombres()).append(" (").append(exp.getInteresado().getTipo()).append(")")
+              .append("\nAsunto: ").append(exp.getAsunto())
+              .append("\nDoc. Referencia: ").append(exp.getDocumentoReferencia())
+              .append("\nInicio: ").append(exp.getFechaInicio())
+              .append("\nFinalización: ").append(exp.getFechaFin() == null ? "En trámite" : exp.getFechaFin())
+              .append("\n\nMovimientos:\n");
+            for (String m : exp.getSeguimientos()) sb.append(" - ").append(m).append("\n");
+            sb.append("\nDocumentos generados:\n");
+            for (String d : exp.getDocumentosGenerados()) sb.append(" - ").append(d).append("\n");
+            if (exp.getFechaFin() != null) {
+                sb.append("\n").append(exp.getComprobanteCierre());
+            }
+            JTextArea detalle = new JTextArea(sb.toString(), 20, 50);
+            detalle.setEditable(false);
+            JOptionPane.showMessageDialog(this, new JScrollPane(detalle), "Seguimiento de Expediente", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
