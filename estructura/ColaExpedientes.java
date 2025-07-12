@@ -17,4 +17,8 @@ public class ColaExpedientes {
     public boolean isEmpty() {
         return cola.isEmpty();
     }
+
+    public java.util.List<Expediente> getAll() {
+        return new java.util.ArrayList<>(cola);
+    }
 }

@@ -1,17 +1,17 @@
 package modela;
 import java.util.Date;
-import java.util.ArrayList;
+import estructura.ListaSimple;
 
 public class Expediente {
     private String id;
-    private String prioridad; // baja, media, alta
+    private String prioridad;
     private String asunto;
     private String documentoReferencia;
     private Interesado interesado;
     private Date fechaInicio;
     private Date fechaFin;
-    private ArrayList<String> seguimientos;
-    private ArrayList<String> documentosGenerados;
+    private ListaSimple<String> seguimientos;
+    private ListaSimple<String> documentosGenerados;
     private String comprobanteCierre = "";
 
     public Expediente(String id, String prioridad, String asunto,
@@ -23,14 +23,14 @@ public class Expediente {
         this.interesado = interesado;
         this.fechaInicio = new Date(); // Fecha actual al crear
         this.fechaFin = null;
-        this.seguimientos = new ArrayList<>();
-        this.documentosGenerados = new ArrayList<>();
+        this.seguimientos = new ListaSimple<>();
+        this.documentosGenerados = new ListaSimple<>();
     }
 
     // Métodos para seguimientos
     public void agregarSeguimiento(String dependencia, String accion) {
         String seguimiento = new Date() + " - " + dependencia + ": " + accion;
-        this.seguimientos.add(seguimiento);
+        this.seguimientos.agregar(seguimiento);
     }
 
     public void finalizarExpediente() {
@@ -39,7 +39,7 @@ public class Expediente {
 
     // Métodos para documentos
     public void agregarDocumentoGenerado(String nombreDocumento) {
-        this.documentosGenerados.add(nombreDocumento);
+        this.documentosGenerados.agregar(nombreDocumento);
     }
 
     // Aqui puse todos los get y set por si se necesita adelante xd
@@ -100,19 +100,19 @@ public class Expediente {
         this.fechaFin = fechaFin;
     }
 
-    public ArrayList<String> getSeguimientos() {
+    public ListaSimple<String> getSeguimientos() {
         return seguimientos;
     }
 
-    public void setSeguimientos(ArrayList<String> seguimientos) {
+    public void setSeguimientos(ListaSimple<String> seguimientos) {
         this.seguimientos = seguimientos;
     }
 
-    public ArrayList<String> getDocumentosGenerados() {
+    public ListaSimple<String> getDocumentosGenerados() {
         return documentosGenerados;
     }
 
-    public void setDocumentosGenerados(ArrayList<String> documentosGenerados) {
+    public void setDocumentosGenerados(ListaSimple<String> documentosGenerados) {
         this.documentosGenerados = documentosGenerados;
     }
 

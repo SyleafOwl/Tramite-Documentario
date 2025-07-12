@@ -34,4 +34,13 @@ public class ListaSimple<T> {
         }
         return false;
     }
+    public java.util.List<T> toList() {
+        java.util.List<T> lista = new java.util.ArrayList<>();
+        Nodo<T> actual = cabeza;
+        while (actual != null) {
+            lista.add(actual.dato);
+            actual = actual.siguiente;
+        }
+        return lista;
+    }
 }
