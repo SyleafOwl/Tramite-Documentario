@@ -6,31 +6,41 @@ public class LoginGUI extends JFrame {
     public LoginGUI() {
         setTitle("Inicio de Sesión - Trámite Documentario");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new GridLayout(4, 2, 10, 10));
+        setLayout(new BorderLayout(10, 10));
 
+        // Logo
+        ImageIcon logoIcon = new ImageIcon("recursos/Universidad_de_Lima_logo.svg.png");
+        Image img = logoIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(img));
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Panel de login
+        JPanel loginPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         JLabel userLabel = new JLabel("Usuario:");
         JTextField userField = new JTextField();
         JLabel passLabel = new JLabel("Contraseña:");
         JPasswordField passField = new JPasswordField();
         JButton loginBtn = new JButton("Ingresar");
 
-        add(userLabel); add(userField);
-        add(passLabel); add(passField);
-        add(new JLabel()); add(loginBtn);
+        loginPanel.add(userLabel); loginPanel.add(userField);
+        loginPanel.add(passLabel); loginPanel.add(passField);
+        loginPanel.add(new JLabel()); loginPanel.add(loginBtn);
+
+        add(logoLabel, BorderLayout.NORTH);
+        add(loginPanel, BorderLayout.CENTER);
 
         loginBtn.addActionListener(e -> {
             String usuario = userField.getText();
             String contrasena = new String(passField.getPassword());
-            // Usuario y contraseña fijos, puedes cambiarlos
             if (usuario.equals("admin") && contrasena.equals("1234")) {
-                dispose(); // Cierra la ventana de login
-                new SistemaGUI(); // Abre el sistema principal
+                dispose();
+                new SistemaGUI();
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        setSize(350, 180);
+        setSize(400, 320);
         setLocationRelativeTo(null);
         setVisible(true);
     }

@@ -23,7 +23,13 @@ public class SistemaGUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Panel de registro
+        // Logo
+        ImageIcon logoIcon = new ImageIcon("recursos/Universidad_de_Lima_logo.svg.png");
+        Image img = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(img));
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Panel de registro (como ya tienes)
         JPanel registroPanel = new JPanel(new GridLayout(0,2));
         JTextField idField = new JTextField();
         JComboBox<String> prioridadField = new JComboBox<>(new String[]{"Alta", "Media", "Baja"});
